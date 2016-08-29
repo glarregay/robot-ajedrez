@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="clasificadores" projectFiles="true">
+        <itemPath>clasificadores/Clasificador.h</itemPath>
+        <itemPath>clasificadores/ClasificadorJ48.h</itemPath>
+        <itemPath>clasificadores/ClasificadorKMedoids.h</itemPath>
+        <itemPath>clasificadores/ClasificadorVotacion.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="excepciones" projectFiles="true">
+        <itemPath>excepciones/CasillaNoValidaException.h</itemPath>
+        <itemPath>excepciones/MovimientoIlegalException.h</itemPath>
+        <itemPath>SocketException.h</itemPath>
+        <itemPath>excepciones/TableroDescalibradoException.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="muestreadores" projectFiles="true">
+        <itemPath>muestreadores/Muestreador.h</itemPath>
+        <itemPath>muestreadores/MuestreadorCuadrado.h</itemPath>
+        <itemPath>muestreadores/MuestreadorHexagonal.h</itemPath>
+      </logicalFolder>
+      <itemPath>Configuracion.h</itemPath>
+      <itemPath>DetectorPiezas.h</itemPath>
+      <itemPath>DisplayLCD.h</itemPath>
+      <itemPath>Estructuras.h</itemPath>
+      <itemPath>ServerSocket.h</itemPath>
+      <itemPath>Socket.h</itemPath>
+      <itemPath>Tablero.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="clasificadores" projectFiles="true">
+        <itemPath>clasificadores/Clasificador.cpp</itemPath>
+        <itemPath>clasificadores/ClasificadorJ48.cpp</itemPath>
+        <itemPath>clasificadores/ClasificadorKMedoids.cpp</itemPath>
+        <itemPath>clasificadores/ClasificadorVotacion.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="excepciones" projectFiles="true">
+        <itemPath>excepciones/CasillaNoValidaException.cpp</itemPath>
+        <itemPath>excepciones/MovimientoIlegalException.cpp</itemPath>
+        <itemPath>excepciones/TableroDescalibradoException.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="muestreadores" projectFiles="true">
+        <itemPath>muestreadores/Muestreador.cpp</itemPath>
+        <itemPath>muestreadores/MuestreadorCuadrado.cpp</itemPath>
+        <itemPath>muestreadores/MuestreadorHexagonal.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>Configuracion.cpp</itemPath>
+      <itemPath>DetectorPiezas.cpp</itemPath>
+      <itemPath>DisplayLCD.cpp</itemPath>
+      <itemPath>ServerSocket.cpp</itemPath>
+      <itemPath>Socket.cpp</itemPath>
+      <itemPath>Tablero.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+      <itemPath>maincurso.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <developmentMode>0</developmentMode>
+          <standard>8</standard>
+          <commandLine>-ansi -pedantic-errors -O2 -ggdb3</commandLine>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="Configuracion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Configuracion.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DetectorPiezas.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DetectorPiezas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DisplayLCD.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DisplayLCD.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Estructuras.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ServerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ServerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Socket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketException.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Tablero.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tablero.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/Clasificador.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clasificadores/Clasificador.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorJ48.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorJ48.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorKMedoids.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorKMedoids.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorVotacion.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorVotacion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/CasillaNoValidaException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/CasillaNoValidaException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/MovimientoIlegalException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/MovimientoIlegalException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/TableroDescalibradoException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/TableroDescalibradoException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="maincurso.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="muestreadores/Muestreador.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="muestreadores/Muestreador.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorCuadrado.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorCuadrado.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorHexagonal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorHexagonal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="Configuracion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Configuracion.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DetectorPiezas.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DetectorPiezas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DisplayLCD.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DisplayLCD.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Estructuras.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ServerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ServerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Socket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Socket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SocketException.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Tablero.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Tablero.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/Clasificador.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clasificadores/Clasificador.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorJ48.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorJ48.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorKMedoids.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorKMedoids.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorVotacion.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="clasificadores/ClasificadorVotacion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/CasillaNoValidaException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/CasillaNoValidaException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/MovimientoIlegalException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/MovimientoIlegalException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="excepciones/TableroDescalibradoException.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="excepciones/TableroDescalibradoException.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="maincurso.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="muestreadores/Muestreador.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="muestreadores/Muestreador.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorHexagonal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="muestreadores/MuestreadorHexagonal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

@@ -2,6 +2,5 @@
 *.a
 *.d
 *.jpg
-nbproject/*
 dist/*
 debug/*
