@@ -18,25 +18,27 @@ DisplayLCD::~DisplayLCD() {
     
 }
 
-void DisplayLCD::escribirLCDlinea1(string mensaje) {
+void DisplayLCD::escribirLCD(string mensaje, int linea) {
     
-    serialPutchar(fd, '@');
-    serialPuts(fd, mensaje.c_str());
+    if(linea == 1)
+        serialPutchar(getInstancia().fd, '@');
+    if(linea == 2)
+        serialPutchar(getInstancia().fd, '$');
     
-}
-void DisplayLCD::escribirLCDlinea2(string mensaje) {
-    
-    serialPutchar(fd, '$');
-    serialPuts(fd, mensaje.c_str());
-    
-}
-void DisplayLCD::escribirLCD(string mensaje) {
-    
-    serialPuts(fd, mensaje.c_str());
+    serialPuts(getInstancia().fd, mensaje.c_str());
     
 }
 void DisplayLCD::borrarLCD() {
     
-    serialPutchar(fd, '*');
+    serialPutchar(getInstancia().fd, '*');
+    
+}
+
+DisplayLCD* DisplayLCD::getInstancia() {
+    
+    if (instancia == NULL) {
+        instancia = new DisplayLCD();
+    }
+    return instancia;
     
 }

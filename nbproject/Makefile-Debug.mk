@@ -49,7 +49,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/excepciones/MovimientoIlegalException.o \
 	${OBJECTDIR}/excepciones/TableroDescalibradoException.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/maincurso.o \
 	${OBJECTDIR}/muestreadores/Muestreador.o \
 	${OBJECTDIR}/muestreadores/MuestreadorCuadrado.o \
 	${OBJECTDIR}/muestreadores/MuestreadorHexagonal.o
@@ -148,11 +147,6 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
-
-${OBJECTDIR}/maincurso.o: maincurso.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/maincurso.o maincurso.cpp
 
 ${OBJECTDIR}/muestreadores/Muestreador.o: muestreadores/Muestreador.cpp 
 	${MKDIR} -p ${OBJECTDIR}/muestreadores

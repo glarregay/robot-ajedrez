@@ -10,18 +10,19 @@ using namespace std;
 
 class DisplayLCD {
 public:
-    DisplayLCD();
-    DisplayLCD(const DisplayLCD& orig);
-    virtual ~DisplayLCD();
     
-    void escribirLCDlinea1(string mensaje);
-    void escribirLCDlinea2(string mensaje);
-    void escribirLCD(string mensaje);
-    void borrarLCD();
+    static void escribirLCD(string mensaje, int linea);
+    static void borrarLCD();
     
 private:
     
+    DisplayLCD();
+    virtual ~DisplayLCD();
+    
     int fd;
+    static DisplayLCD* instancia;
+    
+    static DisplayLCD* getInstancia();
 
 };
 

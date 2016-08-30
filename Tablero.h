@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 
+#include "Configuracion.h"
 #include "excepciones/CasillaNoValidaException.h"
 #include "excepciones/MovimientoIlegalException.h"
 #include "excepciones/TableroDescalibradoException.h"

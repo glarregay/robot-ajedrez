@@ -1,8 +1,4 @@
 #include "Tablero.h"
-#include "Configuracion.h"
-#include "excepciones/CasillaNoValidaException.h"
-#include "excepciones/MovimientoIlegalException.h"
-#include "excepciones/TableroDescalibradoException.h"
 
 Tablero::Tablero() {
     
