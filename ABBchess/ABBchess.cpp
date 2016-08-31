@@ -100,6 +100,22 @@ void ABBchess::waitButton() {
     ctrl->sendCommand(abb_cmd->executeRutine("ButtonWait"),true); 
 }
 
+int ABBchess::buttonPressed(){
+    
+    string state_button = ctrl->sendCommand(abb_cmd->stateButton(),true);
+    
+    if(state_button.compare("pressed")){
+        return 1;
+    }
+    else if(state_button.compare("notpressed")){
+        return 0;
+    }else{
+        return -1;
+    }
+    
+    
+}
+
 ABBchess::~ABBchess(){
 }
 

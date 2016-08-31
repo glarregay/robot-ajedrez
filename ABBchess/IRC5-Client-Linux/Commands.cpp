@@ -27,6 +27,10 @@ string Commands::infoController(){
     return "infoctrl all";
 }
 
+string Commands::stateButton(){
+    return "statebutton";
+}
+
 Commands::Commands(const Commands& orig) {
 }
 

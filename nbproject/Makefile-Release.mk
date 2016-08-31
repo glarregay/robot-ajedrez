@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=MinGW_TDM-Windows
+CND_PLATFORM=MinGW-Windows
 CND_DLIB_EXT=dll
 CND_CONF=Release
 CND_DISTDIR=dist
@@ -35,18 +35,30 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/ABBchess/ABBchess.o \
+	${OBJECTDIR}/ABBchess/ChessPiece.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o \
 	${OBJECTDIR}/Configuracion.o \
 	${OBJECTDIR}/DetectorPiezas.o \
 	${OBJECTDIR}/DisplayLCD.o \
 	${OBJECTDIR}/ServerSocket.o \
 	${OBJECTDIR}/Socket.o \
 	${OBJECTDIR}/Tablero.o \
+	${OBJECTDIR}/clasificadores/Clasificador.o \
+	${OBJECTDIR}/clasificadores/ClasificadorJ48.o \
+	${OBJECTDIR}/clasificadores/ClasificadorKMedoids.o \
+	${OBJECTDIR}/clasificadores/ClasificadorVotacion.o \
 	${OBJECTDIR}/excepciones/CasillaNoValidaException.o \
 	${OBJECTDIR}/excepciones/MovimientoIlegalException.o \
 	${OBJECTDIR}/excepciones/TableroDescalibradoException.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/main_1.o \
-	${OBJECTDIR}/simple_server_main.o
+	${OBJECTDIR}/maincurso.o \
+	${OBJECTDIR}/muestreadores/Muestreador.o \
+	${OBJECTDIR}/muestreadores/MuestreadorHexagonal.o
 
 
 # C Compiler Flags
@@ -67,11 +79,46 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ajedrezcnc.exe
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ajedrezcnc.exe: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ajedrezcnc ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/ABBchess/ABBchess.o: ABBchess/ABBchess.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/ABBchess.o ABBchess/ABBchess.cpp
+
+${OBJECTDIR}/ABBchess/ChessPiece.o: ABBchess/ChessPiece.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/ChessPiece.o ABBchess/ChessPiece.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o: ABBchess/IRC5-Client-Linux/Commands.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o ABBchess/IRC5-Client-Linux/Commands.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o: ABBchess/IRC5-Client-Linux/Controller.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o ABBchess/IRC5-Client-Linux/Controller.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o: ABBchess/IRC5-Client-Linux/RapidData/Num.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o ABBchess/IRC5-Client-Linux/RapidData/Num.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o: ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o: ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp
 
 ${OBJECTDIR}/Configuracion.o: Configuracion.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -103,6 +150,26 @@ ${OBJECTDIR}/Tablero.o: Tablero.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Tablero.o Tablero.cpp
 
+${OBJECTDIR}/clasificadores/Clasificador.o: clasificadores/Clasificador.cpp 
+	${MKDIR} -p ${OBJECTDIR}/clasificadores
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clasificadores/Clasificador.o clasificadores/Clasificador.cpp
+
+${OBJECTDIR}/clasificadores/ClasificadorJ48.o: clasificadores/ClasificadorJ48.cpp 
+	${MKDIR} -p ${OBJECTDIR}/clasificadores
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clasificadores/ClasificadorJ48.o clasificadores/ClasificadorJ48.cpp
+
+${OBJECTDIR}/clasificadores/ClasificadorKMedoids.o: clasificadores/ClasificadorKMedoids.cpp 
+	${MKDIR} -p ${OBJECTDIR}/clasificadores
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clasificadores/ClasificadorKMedoids.o clasificadores/ClasificadorKMedoids.cpp
+
+${OBJECTDIR}/clasificadores/ClasificadorVotacion.o: clasificadores/ClasificadorVotacion.cpp 
+	${MKDIR} -p ${OBJECTDIR}/clasificadores
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/clasificadores/ClasificadorVotacion.o clasificadores/ClasificadorVotacion.cpp
+
 ${OBJECTDIR}/excepciones/CasillaNoValidaException.o: excepciones/CasillaNoValidaException.cpp 
 	${MKDIR} -p ${OBJECTDIR}/excepciones
 	${RM} "$@.d"
@@ -123,15 +190,20 @@ ${OBJECTDIR}/main.o: main.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
-${OBJECTDIR}/main_1.o: main_1.cpp 
+${OBJECTDIR}/maincurso.o: maincurso.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_1.o main_1.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/maincurso.o maincurso.cpp
 
-${OBJECTDIR}/simple_server_main.o: simple_server_main.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/muestreadores/Muestreador.o: muestreadores/Muestreador.cpp 
+	${MKDIR} -p ${OBJECTDIR}/muestreadores
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/simple_server_main.o simple_server_main.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/muestreadores/Muestreador.o muestreadores/Muestreador.cpp
+
+${OBJECTDIR}/muestreadores/MuestreadorHexagonal.o: muestreadores/MuestreadorHexagonal.cpp 
+	${MKDIR} -p ${OBJECTDIR}/muestreadores
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/muestreadores/MuestreadorHexagonal.o muestreadores/MuestreadorHexagonal.cpp
 
 # Subprojects
 .build-subprojects:
@@ -139,7 +211,7 @@ ${OBJECTDIR}/simple_server_main.o: simple_server_main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ajedrezcnc.exe
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez.exe
 
 # Subprojects
 .clean-subprojects:

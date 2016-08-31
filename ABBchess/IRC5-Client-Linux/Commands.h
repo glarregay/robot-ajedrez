@@ -17,6 +17,7 @@ public:
     string executeRutine(string name_rutine);
     string writeData(RapidData* rd);
     string infoController();
+    string stateButton();
  //   void ReadData();
     virtual ~Commands();
 private:
