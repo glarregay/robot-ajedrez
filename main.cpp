@@ -222,7 +222,7 @@ int main(int ac, char *av[]) {
     string respuesta;
     ChessMove respGNU;
     int calibrado = 0;
-    int rGC = 0;
+    int ejecutado = 1;
     
     Configuracion::leerConfiguracion();
         
@@ -334,22 +334,27 @@ int main(int ac, char *av[]) {
                 
             }
             
-            if(calibrado == 1 && rGC == 1) {
+            if(calibrado == 1 && ejecutado == 1) {
                 
                 DisplayLCD::borrarLCD();
                 DisplayLCD::escribirLCD("Esperando jugada", 1);
 
-                abb_chess.waitButton();
+                abb_chess.waitButtonNonBlocking();
                 
-                rGC = 0;
+                ejecutado = 0;
+                
                 string respuesta = interpretarComando("M");
                 write(fdm, respuesta.c_str(), respuesta.length());
                 
             }
             
+            if(ejecutado == 0) {
+                ejecutado = abb_chess.buttonPressed();
+            }
+            
             //rc = pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL);
             //if (rc > 0) {
-            while(pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL)) {
+            if(pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL) > 0) {
                 if (FD_ISSET(fdm, &fd_in)) { // Si hay datos en el lado maestro de la PTY
                     memset(input, 0, MAXCMD);
                     rc = read(fdm, input, sizeof (input));
@@ -388,9 +393,6 @@ int main(int ac, char *av[]) {
                         }
                     } else if (rc < 0) mostrarError(errno, "lectura del lado maestro de la PTY");
                 }
-                
-                rGC = 1;
-                this_thread::sleep_for(chrono::milliseconds(1000));
             } 
         }
     } else {

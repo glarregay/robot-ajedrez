@@ -35,6 +35,14 @@ string Controller::sendCommand(string command,bool wait_command){
     
   *buffer_send=(char*)command.c_str();
   
+  do{
+    bytes_read=recv(sockfd,buffer_recv,255,MSG_DONTWAIT);
+    sread << buffer_recv ;
+  } while(bytes_read != -1);
+  
+  bytes_read = 0;
+  sread.clear();
+  
   send(sockfd,*buffer_send,command.length(), 0);
   
   if(wait_command==true){
@@ -48,9 +56,14 @@ string Controller::sendCommand(string command,bool wait_command){
 string Controller::readResponse() {
     
     stringstream sread;
+    sread.clear();
     
     bytes_read=recv(sockfd,buffer_recv,255,MSG_DONTWAIT);
     sread << buffer_recv ;
+    
+    if(bytes_read == -1) {
+        return "";
+    }
     
     return sread.str();
     

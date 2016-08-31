@@ -30,6 +30,7 @@ public:
     void disconnectABBchess();
     void playMove();
     void waitButton();
+    void waitButtonNonBlocking();
     int buttonPressed();
     virtual ~ABBchess();
 private:

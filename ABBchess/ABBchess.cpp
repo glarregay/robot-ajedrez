@@ -113,7 +113,19 @@ int ABBchess::buttonPressed(){
         return -1;
     }
     
+}
+
+void ABBchess::waitButtonNonBlocking() {
+    ctrl->sendCommand(abb_cmd->executeRutine("ButtonWait"),false); 
+}
+
+int ABBchess::buttonPressed() {
+    string resp = ctrl->readResponse();
     
+    if(resp.size() > 0) 
+        return 1;
+    else
+        return 0;
 }
 
 ABBchess::~ABBchess(){
