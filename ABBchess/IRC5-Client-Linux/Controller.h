@@ -35,6 +35,7 @@ public:
     void connectController();
     void disconnectController();
     string sendCommand(string command,bool wait_command);
+    string readResponse();
     void getRapidData();
     virtual ~Controller();
   

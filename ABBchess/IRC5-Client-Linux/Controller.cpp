@@ -29,6 +29,7 @@ void Controller::disconnectController(){
 string Controller::sendCommand(string command,bool wait_command){
    
   stringstream sread;
+  sread.clear();
   
   command.push_back('\n');
     
@@ -39,11 +40,21 @@ string Controller::sendCommand(string command,bool wait_command){
   if(wait_command==true){
     bytes_read=recv(sockfd,buffer_recv,255,0);
     sread << buffer_recv ;
-  }else{
-    sread << " ";  
-  }  
+  }
+  
   return sread.str();
 } 
+
+string Controller::readResponse() {
+    
+    stringstream sread;
+    
+    bytes_read=recv(sockfd,buffer_recv,255,MSG_DONTWAIT);
+    sread << buffer_recv ;
+    
+    return sread.str();
+    
+}
 
 
 Controller::Controller(const Controller& orig) {
