@@ -39,7 +39,7 @@ void Configuracion::leerConfiguracion(void) {
     double valor = 0;
 
     // Leo el archivo y lo copio al vector, salgo si no puedo abrirlo o no existe.
-    ifstream entrada("/home/guille/testbot/config.txt");
+    ifstream entrada("/home/pi/config.txt");
     if (!entrada) {
         cout << "No se pudo abrir el archivo de configuracion" << endl;
         exit(1);

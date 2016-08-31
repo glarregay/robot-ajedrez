@@ -21,8 +21,14 @@ void ABBchess::disconnectABBchess(){
 
 void ABBchess::motionCapture(){
 
-    ctrl->sendCommand(abb_cmd->executeRutine("MotionCapture"),true);
-    ctrl->sendCommand(abb_cmd->executeRutine("OpenGripper"),false);
+    ctrl->sendCommand(abb_cmd->executeRutine("HomeCamera"),true);
+    ctrl->sendCommand(abb_cmd->executeRutine("OpenGripper"),true);
+    
+}
+
+void ABBchess::motionCalibration(){
+
+    ctrl->sendCommand(abb_cmd->executeRutine("HomeCamera"),true);
     
 }
 
@@ -51,6 +57,9 @@ void ABBchess::updateChessMove(ChessMove* chess_move){
             this->routine="LongCastlingMove";
             chess_move->piece_destiny.setPiece(piece::Rook); 
             pos_p1->setZ(-(chess_move->piece_destiny.getHeight()));
+        break;
+        
+        case MovementType::None:
         break;
         
     }
@@ -85,6 +94,10 @@ void ABBchess::playMove(){
     ctrl->sendCommand(abb_cmd->executeRutine("UpdateTargets"),true);
     ctrl->sendCommand(abb_cmd->executeRutine(this->routine),true);
     ctrl->sendCommand(abb_cmd->executeRutine("HumanWait"),true);  
+}
+
+void ABBchess::waitButton() {
+    ctrl->sendCommand(abb_cmd->executeRutine("ButtonWait"),true); 
 }
 
 ABBchess::~ABBchess(){

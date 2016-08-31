@@ -8,6 +8,8 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
@@ -17,18 +19,21 @@
 #include "Tablero.h"
 #include "ServerSocket.h"
 #include "SocketException.h"
-//#include "DisplayLCD.h"
+#include "ABBchess/ABBchess.h"
+#include "DisplayLCD.h"
 
 #define MAXCMD 500
 
 using namespace std;
 
 Tablero* tab;
-//DisplayLCD* display;
 DetectorPiezas* visor;
+ABBchess abb_chess("10.123.0.118",8001);
+
 int fdm, fds;
 int rc;
 char input[MAXCMD];
+int debug = 1;
 
 int mostrarError(int numero, string mensaje) {
 
@@ -70,6 +75,9 @@ string trimRight(const string& cadena) {
 
 string interpretarComando(string cmd) {
     
+    if(debug)
+        cout << "Comando a interpretar: [ " << cmd << "] " << endl;
+    
     cmd = trimRight(cmd);
     vector<string> comando = split(cmd, " ");
     stringstream enviar;
@@ -88,6 +96,7 @@ string interpretarComando(string cmd) {
         
         enviar << "time " << tm << endl;
     }
+    
     // Comando de movimiento
     // Formato: M
     else if(comando.at(0).compare("M") == 0) {
@@ -96,6 +105,9 @@ string interpretarComando(string cmd) {
         display->escribirLCDlinea1("Ubicando robot");*/
             
         string mov; 
+        
+        //abb_chess.motionCapture();
+        
         mov = visor->detectarCambios(visor->convertirVectorEstado(tab->estadoActual()));
         if(mov.length() > 0) {
             tab->mover(mov);
@@ -110,12 +122,11 @@ string interpretarComando(string cmd) {
             display->escribirLCDlinea2("Su turno...");*/
         }
     }
+    
     // Comando de referenciación del visor
     // Formato: R
     else if(comando.at(0).compare("R") == 0) {
         visor->generarReferencias();
-/*        display->borrarLCD();
-        display->escribirLCDlinea1("Su turno...");*/
     }
     // Comando de cargar imagenes debug
     // Formato: I
@@ -137,13 +148,7 @@ string interpretarComando(string cmd) {
         string arch = comando.at(1);
         visor->generarReferencias(arch);
     }
-    // Comando de Esperar jugador
-    // Formato: F
-    else if(comando.at(0).compare("F") == 0) {
-/*        display->borrarLCD();
-        display->escribirLCDlinea1("Mov. terminado");
-        display->escribirLCDlinea2("Su turno...");*/
-    }
+    
     // Comando de calibración
     // Formato: C <a1x>;<a1y> <a8x>;<a8y> <h1x>;<h1y>
     else if(comando.at(0).compare("C") == 0) {
@@ -162,26 +167,17 @@ string interpretarComando(string cmd) {
             casillas.at(i-1) = pair<double, double>(x, y);
         }
         
-        tab->coordenadasExtremos(casillas[0], casillas[1], casillas[2]);
+        tab->calibrarCoordenadasExtremos(casillas[0], casillas[1], casillas[2]);
         
     }
+    
     // Comando de nueva partida
     // Formato: N
     else if(comando.at(0).compare("N") == 0) {   
         enviar << "new" << endl;
-        tab->reiniciarTablero();
+        tab->nuevaPartida();
     }
-    // Comando de mostrar tablero
-    // Formato: S
-    else if(comando.at(0).compare("S") == 0) {
-        tab->mostrarTablero();
-        //enviar << "show board" << endl;
-    }
-    // Comando de mostrar votaciones
-    // Formato: V
-    else if(comando.at(0).compare("V") == 0) {
-        visor->mostrarEstadoActual();
-    }
+    
     // Comando de debug
     // Formato: D (R|C|T) fila columna
     else if(comando.at(0).compare("D") == 0) {
@@ -224,16 +220,24 @@ int main(int ac, char *av[]) {
     int retvals;
     char input[MAXCMD];
     string respuesta;
-    int debug = 1;
+    ChessMove respGNU;
+    int calibrado = 0;
+    int rGC = 0;
     
     Configuracion::leerConfiguracion();
+        
+    DisplayLCD::borrarLCD();
     
     tab = new Tablero();
-    
-//    display = new DisplayLCD();
     visor = new DetectorPiezas();
     
-    tab->coordenadasExtremos(
+    DisplayLCD::escribirLCD("Conexion ABB: ", 1);
+    abb_chess.connectABBchess();
+    DisplayLCD::escribirLCD("OK", 2);
+    
+    int dificultad = Configuracion::getParametro("DIFICULTAD_GNUCHESS");
+    
+    tab->calibrarCoordenadasExtremos(
             make_pair<double, double>(0,350),
             make_pair<double, double>(0,0),
             make_pair<double, double>(350,350));
@@ -263,7 +267,7 @@ int main(int ac, char *av[]) {
         close(fds); // Se cierra el lado esclavo de la PTY
 
         ServerSocket nvo_sock;
-        srv.accept(nvo_sock);
+        //srv.accept(nvo_sock);
         
         if(debug) {
             cout << "main:" << endl;
@@ -287,29 +291,71 @@ int main(int ac, char *av[]) {
             string datos_sock;
             stringstream resp_gnuch;
             
-            nvo_sock >> datos_sock;
-                                                
-            if(datos_sock.length() > 0) {
+            //nvo_sock >> datos_sock;
+            
+            if(calibrado == 0) {
                 
-                if(debug) {
-                    cout << "main:" << endl;
-                    cout << "   Datos recibidos en socket." << endl;
-                    cout << "   DATA: " << datos_sock << endl;
-                    cout << "   LEN:  " << datos_sock.length() << endl;
-                }
-                respuesta = interpretarComando(datos_sock);
-                retvals = write(fdm, respuesta.c_str(), respuesta.length());
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Ubicando robot.", 1);
+                DisplayLCD::escribirLCD("Espere...", 2);
+                
+                this_thread::sleep_for(chrono::milliseconds(5000));
+                abb_chess.motionCalibration();
+                
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Pulse el boton", 1);
+                DisplayLCD::escribirLCD("para calibrar", 2);
+                interpretarComando("R"); 
+                
+                abb_chess.waitButton();
+                
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Espere...", 1);
+                
+                this_thread::sleep_for(chrono::milliseconds(5000));
+                interpretarComando("R");
+                
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Camara calibrada", 1);
+                
+                this_thread::sleep_for(chrono::milliseconds(2000));
+                
+                string msg = "Dific.: " + to_string(dificultad);
+                string cmd = "T " + to_string(dificultad);
+                
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Nueva partida.", 1);
+                DisplayLCD::escribirLCD(msg, 2);
+                
+                interpretarComando("N");
+                interpretarComando(cmd);
+                
+                calibrado = 1;
+                
             }
-            rc = pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL);
-            if (rc > 0) {
+            
+            if(calibrado == 1 && rGC == 1) {
+                
+                DisplayLCD::borrarLCD();
+                DisplayLCD::escribirLCD("Esperando jugada", 1);
+
+                abb_chess.waitButton();
+                
+                rGC = 0;
+                string respuesta = interpretarComando("M");
+                write(fdm, respuesta.c_str(), respuesta.length());
+                
+            }
+            
+            //rc = pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL);
+            //if (rc > 0) {
+            while(pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL)) {
                 if (FD_ISSET(fdm, &fd_in)) { // Si hay datos en el lado maestro de la PTY
                     memset(input, 0, MAXCMD);
-                    nanosleep(&timeout, NULL);
                     rc = read(fdm, input, sizeof (input));
                     resp_gnuch << input;
                     
                     if (resp_gnuch.str().length() > 0) {
-                        //write(1, input, rc);
                         
                         if(debug) {
                             cout << "main:" << endl;
@@ -319,29 +365,33 @@ int main(int ac, char *av[]) {
                         }
                         
                         if (Configuracion::getParametro("HABILITAR_MOVIMIENTO") == 1) {
-                            respuesta = tab->analizarRespuesta(resp_gnuch.str());  
+                            respGNU = tab->analizarRespuestaGNUChess(resp_gnuch.str());  
                             
-                            if (respuesta.find("Black",0) != string::npos) {
-/*                                display->borrarLCD();
-                                display->escribirLCDlinea1("Fin del juego.");
-                                display->escribirLCDlinea2("Ganan Negras.");*/
+                            if (respGNU.mate_type == MateType::Black) {
+                                DisplayLCD::borrarLCD();
+                                DisplayLCD::escribirLCD("Fin del juego", 1);
+                                DisplayLCD::escribirLCD("Ganan negras", 2);
                             }
                             
-                            if (respuesta.find("White",0) != string::npos) {
-/*                                display->borrarLCD();
-                                display->escribirLCDlinea1("Fin del juego.");
-                                display->escribirLCDlinea2("Ganan Blancas.");*/
+                            if (respGNU.mate_type == MateType::White) {
+                                DisplayLCD::borrarLCD();
+                                DisplayLCD::escribirLCD("Fin del juego", 1);
+                                DisplayLCD::escribirLCD("Ganan blancas", 2);
                             }
                                 
-                            nvo_sock << respuesta;
+                            if(respGNU.move_type != MovementType::None) {
+                                abb_chess.updateChessMove(&respGNU);
+                                abb_chess.playMove();
+                            }
                             resp_gnuch.clear();
                             memset(input, 0, MAXCMD);
                         }
                     } else if (rc < 0) mostrarError(errno, "lectura del lado maestro de la PTY");
                 }
-            } else if(rc < 0) {
-                mostrarError(errno, "select()");
-            }
+                
+                rGC = 1;
+                this_thread::sleep_for(chrono::milliseconds(1000));
+            } 
         }
     } else {
         // Proceso Hijo

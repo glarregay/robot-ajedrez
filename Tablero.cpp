@@ -21,7 +21,7 @@ Tablero::Tablero(const Tablero& orig) {
 Tablero::~Tablero() {
 }
 
-void Tablero::reiniciarTablero() {
+void Tablero::nuevaPartida() {
     
     est.at(0) = {'T','P','-','-','-','-','p','t'};
     est.at(1) = {'C','P','-','-','-','-','p','c'};
@@ -61,6 +61,29 @@ char Tablero::piezaEnCasilla(string casilla) {
 
 }
 
+piece Tablero::piezaEnCasillaCM(string casilla) {
+
+    char pz = tolower(est.at(columna(casilla)).at(fila(casilla)));
+    
+    switch(pz) {
+        case 'c':
+            return piece::Knight;
+        case 'p':
+            return piece::Pawn;
+        case 't':
+            return piece::Rook;
+        case 'a':
+            return piece::Bishop;
+        case 'r':
+            return piece::King;
+        case 'd':
+            return piece::Queen;
+        default:
+            return piece::None;
+    }
+    
+}
+
 int Tablero::columna(string casilla) {
 
     //es valida la casilla?
@@ -79,12 +102,16 @@ int Tablero::fila(string casilla) {
 
 }
 
-string Tablero::analizarRespuesta(string mensaje) {
+ChessMove Tablero::analizarRespuestaGNUChess(string mensaje) {
 
     size_t pRes;
     string movimiento;
     string reporte;
     string mate = "None";
+    
+    ChessMove cm;
+    cm.move_type = MovementType::None;
+    cm.mate_type = MateType::None;
     
     if(debug) {
         cout << "analizarRespuesta:" << endl;
@@ -109,7 +136,7 @@ string Tablero::analizarRespuesta(string mensaje) {
             
             string origen = movimiento.substr(0,2);
             string destino = movimiento.substr(2,2);
-            reporte = reporteMovimientoCorregir(destino, origen, mate);
+            cm = reporteMovimientoCorregirCM(destino, origen, mate);
             
             if(tipoMovimiento(destino,origen).compare("Normal") != 0) {
                 cout << "Estado de tablero inconsistente" << endl;
@@ -125,7 +152,7 @@ string Tablero::analizarRespuesta(string mensaje) {
             for (unsigned int i = 0; i < movimiento.length(); i++)
                 if (!isalnum(movimiento.at(i))) movimiento.at(i) = 0;
             
-            reporte = reporteMovimiento(movimiento.substr(0,2), movimiento.substr(2,2), mate);
+            cm = reporteMovimientoCM(movimiento.substr(0,2), movimiento.substr(2,2), mate);
             mover(movimiento);
             
 /*            display->borrarLCD();
@@ -139,7 +166,7 @@ string Tablero::analizarRespuesta(string mensaje) {
             cout << "   argout: " << reporte << endl;
         }
         
-        return reporte;
+        return cm;
 
     } else {
         if(debug) {
@@ -148,12 +175,12 @@ string Tablero::analizarRespuesta(string mensaje) {
         }
         
         if(mate.compare("White") == 0) {
-            reporte = reporteMovimiento(movimiento.substr(0,2), movimiento.substr(2,2), mate);            
+            cm = reporteMovimientoCM(movimiento.substr(0,2), movimiento.substr(2,2), mate);            
         } else {
-            reporte = "";
+            cm.move_type = MovementType::None;
         }
        
-        return reporte;
+        return cm;
     }
 }
 
@@ -231,8 +258,10 @@ string Tablero::mover(string movimiento) {
             est.at(co).at(fo) = '-';
         }
         
-        cout << "Despues del movimiento en GNUChess" << endl;
-        mostrarTablero();
+        if(debug) {
+            cout << "Despues del movimiento en GNUChess" << endl;
+            mostrarTablero();
+        }
         
         return reporte;
 
@@ -247,16 +276,7 @@ string Tablero::mover(string movimiento) {
 
 }
 
-void Tablero::mostrarTablero(void) {
-    for (int i = 7; i >= 0; i--) {
-        for (int j = 0; j < 8; j++){
-            printf("%c ", est.at(j).at(i));
-        }
-        printf("\n");
-    }
-}
-
-int Tablero::coordenadasExtremos(coordenadasFisicas a1, coordenadasFisicas a8, coordenadasFisicas h1) {
+int Tablero::calibrarCoordenadasExtremos(coordenadasFisicas a1, coordenadasFisicas a8, coordenadasFisicas h1) {
     
     this->a1 = a1;
     this->vx = make_pair<double, double>((h1.first - a1.first) / 7.0, (h1.second - a1.second) / 7.0);
@@ -344,6 +364,38 @@ string Tablero::reporteMovimiento(string origen, string destino, string mate) {
     
 }
 
+ChessMove Tablero::reporteMovimientoCM(string origen, string destino, string mate) {
+    
+    ChessMove cm;
+           
+    coordenadasFisicas orig = obtenerCoordenadas(fila(origen) , columna(origen));
+    coordenadasFisicas dest = obtenerCoordenadas(fila(destino), columna(destino));
+    
+    cm.move_type = tipoMovimientoCM(origen, destino);
+    cm.piece_origin.setPiece(piezaEnCasillaCM(origen));
+    cm.piece_origin.setCoord(orig.first, orig.second);
+    cm.piece_destiny.setPiece(piezaEnCasillaCM(destino));
+    cm.piece_destiny.setCoord(dest.first, dest.second);
+    cm.mate_type = MateType::None;
+    
+    if(mate.compare("White") == 0) {
+        cm.mate_type = MateType::White;
+/*        display->borrarLCD();
+        display->escribirLCDlinea1("Fin del juego.");
+        display->escribirLCDlinea2("Ganan blancas.");*/
+    }
+    if(mate.compare("Black") == 0) {
+        cm.mate_type = MateType::Black;
+/*        display->borrarLCD();
+        display->escribirLCDlinea1("Fin del juego.");
+        display->escribirLCDlinea2("Ganan negras.");*/
+    }
+
+    return cm; 
+    
+}
+
+
 string Tablero::reporteMovimientoCorregir(string origen, string destino, string mate) {
     
     /*     
@@ -393,6 +445,24 @@ string Tablero::reporteMovimientoCorregir(string origen, string destino, string 
         << std::endl;
     
     return out.str(); 
+    
+}
+
+ChessMove Tablero::reporteMovimientoCorregirCM(string origen, string destino, string mate) {
+
+    ChessMove cm;
+           
+    coordenadasFisicas orig = obtenerCoordenadas(fila(origen) , columna(origen));
+    coordenadasFisicas dest = obtenerCoordenadas(fila(destino), columna(destino));
+    
+    cm.move_type = MovementType::Normal;
+    cm.piece_origin.setPiece(piezaEnCasillaCM(origen));
+    cm.piece_origin.setCoord(orig.first, orig.second);
+    cm.piece_destiny.setPiece(piezaEnCasillaCM(destino));
+    cm.piece_destiny.setCoord(dest.first, dest.second);
+    cm.mate_type = MateType::None;
+
+    return cm; 
     
 }
 
@@ -476,8 +546,70 @@ string Tablero::tipoMovimiento(string origen, string destino) {
     
 }
 
+MovementType Tablero::tipoMovimientoCM(string origen, string destino) {
+    
+    MovementType tipo; 
+       
+    if(debug) {
+        cout << "tipoMovimiento:" << endl;
+        cout << "   argin: " << origen << endl;
+        cout << "   argin: " << destino << endl;
+    }
+    // Enroque Corto
+    if((origen.compare("e1")==0 && destino.compare("g1")==0) ||
+       (origen.compare("e8")==0 && destino.compare("g8")==0)) {
+        if((piezaEnCasilla(origen) == 'R') || (piezaEnCasilla(origen) == 'r')) {
+            tipo = MovementType::ShortCastling;
+        } else {
+            tipo = MovementType::Normal;
+        }
+    }
+    
+    // Enroque Largo
+    else if((origen.compare("e1")==0 && destino.compare("c1")==0) ||
+       (origen.compare("e8")==0 && destino.compare("c8")==0)) {
+        if((piezaEnCasilla(origen) == 'R') || (piezaEnCasilla(origen) == 'r')) {
+            tipo = MovementType::LongCastling;
+        } else {
+            tipo = MovementType::Normal;
+        }
+    }
+    
+    // Peon al paso
+    /*else if((tolower(piezaEnCasilla(origen)) == 'p') &&
+            (fila(origen) == 5 || fila(origen) == 4) &&
+            piezaEnCasilla(destino) == '-' &&
+            abs(columna(origen) - columna(destino)) == 1) {
+        tipo = "Passant";
+    }*/
+    
+    // Ataque  
+    else if(piezaEnCasilla(destino) != '-') {
+        tipo = MovementType::Attack;
+    } 
+    
+    // Normal
+    else {
+        tipo = MovementType::Normal;
+    }
+    
+    return tipo;
+    
+}
+
 estadoTableroChar Tablero::estadoActual() {
     
     return est;
+    
+}
+
+void Tablero::mostrarTablero() {
+    
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            cout << est.at(i).at(j);
+        }
+        cout << endl;
+    }
     
 }

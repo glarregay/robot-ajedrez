@@ -1,13 +1,12 @@
 #ifndef CHESSPIECE_H
 #define CHESSPIECE_H
 
-enum class piece{Pawn,Knight,Bishop,Rook,Queen,King};
+enum class piece{Pawn,Knight,Bishop,Rook,Queen,King,None};
 
-typedef struct coord{
-    float x; 
+typedef struct coorden {
+    float x;
     float y;
-    
-}CoordPiece;
+} CoordPiece;
 
 class ChessPiece {   
 public:

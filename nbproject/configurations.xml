@@ -4,6 +4,19 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="ABBChess" projectFiles="true">
+        <logicalFolder name="f1" displayName="IRC5-client-linux" projectFiles="true">
+          <logicalFolder name="f1" displayName="RapidData" projectFiles="true">
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/Num.h</itemPath>
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/Pos.h</itemPath>
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/RapidData.h</itemPath>
+          </logicalFolder>
+          <itemPath>ABBchess/IRC5-Client-Linux/Commands.h</itemPath>
+          <itemPath>ABBchess/IRC5-Client-Linux/Controller.h</itemPath>
+        </logicalFolder>
+        <itemPath>ABBchess/ABBchess.h</itemPath>
+        <itemPath>ABBchess/ChessPiece.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="clasificadores" projectFiles="true">
         <itemPath>clasificadores/Clasificador.h</itemPath>
         <itemPath>clasificadores/ClasificadorJ48.h</itemPath>
@@ -36,6 +49,21 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="ABBchess" displayName="ABBchess" projectFiles="true">
+        <logicalFolder name="IRC5-Client-Linux"
+                       displayName="IRC5-Client-Linux"
+                       projectFiles="true">
+          <logicalFolder name="RapidData" displayName="RapidData" projectFiles="true">
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/Num.cpp</itemPath>
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp</itemPath>
+            <itemPath>ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp</itemPath>
+          </logicalFolder>
+          <itemPath>ABBchess/IRC5-Client-Linux/Commands.cpp</itemPath>
+          <itemPath>ABBchess/IRC5-Client-Linux/Controller.cpp</itemPath>
+        </logicalFolder>
+        <itemPath>ABBchess/ABBchess.cpp</itemPath>
+        <itemPath>ABBchess/ChessPiece.cpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="clasificadores" projectFiles="true">
         <itemPath>clasificadores/Clasificador.cpp</itemPath>
         <itemPath>clasificadores/ClasificadorJ48.cpp</itemPath>
@@ -73,6 +101,9 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>ABBchess</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
@@ -85,15 +116,74 @@
         <ccTool>
           <developmentMode>0</developmentMode>
           <standard>8</standard>
-          <commandLine>-ansi -pedantic-errors -O2 -ggdb3</commandLine>
+          <commandLine>-ansi -pedantic-errors -O0 -ggdb3</commandLine>
           <warningLevel>2</warningLevel>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+            <linkerLibLibItem>wiringPi</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="ABBchess/ABBchess.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ABBchess/ABBchess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ABBchess/ChessPiece.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ABBchess/ChessPiece.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Commands.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Commands.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Controller.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Num.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Num.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Pos.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/RapidData.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Configuracion.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Configuracion.h" ex="false" tool="3" flavor2="0">
@@ -227,6 +317,64 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="ABBchess/ABBchess.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ABBchess/ABBchess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ABBchess/ChessPiece.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ABBchess/ChessPiece.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Commands.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Commands.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/Controller.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Num.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Num.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/Pos.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="ABBchess/IRC5-Client-Linux/RapidData/RapidData.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Configuracion.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Configuracion.h" ex="false" tool="3" flavor2="0">

@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-Linux
+CND_PLATFORM=GNU-None
 CND_DLIB_EXT=so
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -35,6 +35,13 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/ABBchess/ABBchess.o \
+	${OBJECTDIR}/ABBchess/ChessPiece.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o \
+	${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o \
 	${OBJECTDIR}/Configuracion.o \
 	${OBJECTDIR}/DetectorPiezas.o \
 	${OBJECTDIR}/DisplayLCD.o \
@@ -58,8 +65,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-ansi -pedantic-errors -O2 -ggdb3
-CXXFLAGS=-ansi -pedantic-errors -O2 -ggdb3
+CCFLAGS=-ansi -pedantic-errors -O0 -ggdb3
+CXXFLAGS=-ansi -pedantic-errors -O0 -ggdb3
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -68,7 +75,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs opencv`  
+LDLIBSOPTIONS=`pkg-config --libs opencv` -lwiringPi  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -77,6 +84,41 @@ LDLIBSOPTIONS=`pkg-config --libs opencv`
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/robot-ajedrez ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/ABBchess/ABBchess.o: ABBchess/ABBchess.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/ABBchess.o ABBchess/ABBchess.cpp
+
+${OBJECTDIR}/ABBchess/ChessPiece.o: ABBchess/ChessPiece.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/ChessPiece.o ABBchess/ChessPiece.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o: ABBchess/IRC5-Client-Linux/Commands.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Commands.o ABBchess/IRC5-Client-Linux/Commands.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o: ABBchess/IRC5-Client-Linux/Controller.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/Controller.o ABBchess/IRC5-Client-Linux/Controller.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o: ABBchess/IRC5-Client-Linux/RapidData/Num.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Num.o ABBchess/IRC5-Client-Linux/RapidData/Num.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o: ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/Pos.o ABBchess/IRC5-Client-Linux/RapidData/Pos.cpp
+
+${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o: ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData
+	${RM} "$@.d"
+	$(COMPILE.cc) -Wall `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ABBchess/IRC5-Client-Linux/RapidData/RapidData.o ABBchess/IRC5-Client-Linux/RapidData/RapidData.cpp
 
 ${OBJECTDIR}/Configuracion.o: Configuracion.cpp 
 	${MKDIR} -p ${OBJECTDIR}

@@ -96,12 +96,6 @@ void DetectorPiezas::mostrarVectorChar(estadoTableroChar in) {
     
 }
 
-void DetectorPiezas::mostrarEstadoActual() {
-    
-    mostrarVector(obtenerVotaciones());
-    
-}
-
 string DetectorPiezas::convertirCambioEnJugada(estadoTableroInt c, int cant) {
     
     string salida;

@@ -61,19 +61,21 @@ int Muestreador::procesarImagen(Mat &salida) {
     //autobalancearBlancos(salida);
     acomodarHistograma(salida);
     
-    corregirGamma(salida, 1.8);
+    corregirGamma(salida, 1.3);
     
     if(debug)
         cout << "Mejorando contraste y saturacion..." << endl;
     
     // Convertir a Lab y promediar luminancia
     cvtColor(salida, salida, CV_BGR2HLS);
-    split(salida, capas);
-    promediarLuminancia(capas.at(0));
-    promediarLuminancia(capas.at(1));
+    //split(salida, capas);
+    //promediarLuminancia(capas.at(0));
     //clahe->apply(capas.at(1), capas.at(1));
-    promediarLuminancia(capas.at(2));   
-    merge(capas, salida);
+    //promediarLuminancia(capas.at(1));
+    //clahe->apply(capas.at(1), capas.at(1));
+    //promediarLuminancia(capas.at(2));   
+    //clahe->apply(capas.at(1), capas.at(1));
+    //merge(capas, salida);
     acomodarHistograma(salida);
     //cvtColor(salida, salida, CV_HLS2BGR);    
     //cvtColor(salida, salida, CV_BGR2HSV);

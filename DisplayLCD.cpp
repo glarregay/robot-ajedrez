@@ -1,5 +1,7 @@
 #include "DisplayLCD.h"
 
+DisplayLCD* DisplayLCD::instancia;
+
 DisplayLCD::DisplayLCD() {
     fd = serialOpen("/dev/rfcomm0", 9600);
     
@@ -7,9 +9,6 @@ DisplayLCD::DisplayLCD() {
         cout << "No se pudo abrir el puerto serie" << endl;
     }
     serialPutchar(fd, '#');
-}
-
-DisplayLCD::DisplayLCD(const DisplayLCD& orig) {
 }
 
 DisplayLCD::~DisplayLCD() {
@@ -21,16 +20,16 @@ DisplayLCD::~DisplayLCD() {
 void DisplayLCD::escribirLCD(string mensaje, int linea) {
     
     if(linea == 1)
-        serialPutchar(getInstancia().fd, '@');
+        serialPutchar(getInstancia()->fd, '@');
     if(linea == 2)
-        serialPutchar(getInstancia().fd, '$');
+        serialPutchar(getInstancia()->fd, '$');
     
-    serialPuts(getInstancia().fd, mensaje.c_str());
+    serialPuts(getInstancia()->fd, mensaje.c_str());
     
 }
 void DisplayLCD::borrarLCD() {
     
-    serialPutchar(getInstancia().fd, '*');
+    serialPutchar(getInstancia()->fd, '*');
     
 }
 

@@ -15,8 +15,7 @@
 #include "DetectorPiezas.h"
 #include "Estructuras.h"
 #include "DisplayLCD.h"
-
-extern DisplayLCD * display;
+#include "ABBchess/ABBchess.h"
 
 using namespace std;
 
@@ -27,15 +26,14 @@ public:
     virtual ~Tablero();
     
     string mover(string movimiento);
-    void mostrarTablero(void);
+    void moverDesdeCamara();
+    int calibrarCoordenadasExtremos(coordenadasFisicas a1, coordenadasFisicas a8, coordenadasFisicas h1);
     
-    int coordenadasExtremos(coordenadasFisicas a1, coordenadasFisicas a8, coordenadasFisicas h1);
-    
-    string analizarRespuesta(string mensaje);
+    ChessMove analizarRespuestaGNUChess(string mensaje);
+        
+    void nuevaPartida();
     
     estadoTableroChar estadoActual();
-    
-    void reiniciarTablero();
     
 private:
     
@@ -49,16 +47,22 @@ private:
     bool casillaVacia(string casilla);
     
     char piezaEnCasilla(string casilla);
+    piece piezaEnCasillaCM(string casilla);
         
     int columna(string casilla);
     int fila(string casilla);
     
     coordenadasFisicas obtenerCoordenadas(int fila, int columna);
     string reporteMovimiento(string origen, string destino, string mate);
+    ChessMove reporteMovimientoCM(string origen, string destino, string mate);
     string reporteMovimientoCorregir(string origen, string destino, string mate);
+    ChessMove reporteMovimientoCorregirCM(string origen, string destino, string mate);
     
     string nombrePieza(char p);
     string tipoMovimiento(string origen, string destino);
+    MovementType tipoMovimientoCM(string origen, string destino);
+    
+    void mostrarTablero();
     
 };
 

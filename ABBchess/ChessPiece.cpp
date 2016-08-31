@@ -33,6 +33,10 @@ void ChessPiece::setPiece(piece p){
         case piece::King:
             this->height = 47.f;
         break;
+        
+        case piece::None:
+            this->height = 0.f;
+        break;
     }
     
 }
