@@ -61,7 +61,7 @@ int Muestreador::procesarImagen(Mat &salida) {
     //autobalancearBlancos(salida);
     acomodarHistograma(salida);
     
-    corregirGamma(salida, 1.3);
+    corregirGamma(salida, 1.1);
     
     if(debug)
         cout << "Mejorando contraste y saturacion..." << endl;

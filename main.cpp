@@ -26,14 +26,19 @@
 
 using namespace std;
 
+enum class EstadoBucle{Inicial,Calibrado,NuevaPartida,EsperaJugada,EsperaGNUChess};
+
 Tablero* tab;
 DetectorPiezas* visor;
 ABBchess abb_chess("10.123.0.118",8001);
 
 int fdm, fds;
+fd_set fd_in;
 int rc;
 char input[MAXCMD];
 int debug = 1;
+
+int calibrado = 0, partidaNueva = 0, tiempoConfigurado = 0; 
 
 int mostrarError(int numero, string mensaje) {
 
@@ -106,7 +111,7 @@ string interpretarComando(string cmd) {
             
         string mov; 
         
-        //abb_chess.motionCapture();
+        abb_chess.motionCapture();
         
         mov = visor->detectarCambios(visor->convertirVectorEstado(tab->estadoActual()));
         if(mov.length() > 0) {
@@ -213,16 +218,157 @@ string interpretarComando(string cmd) {
     
 }
 
+EstadoBucle ejecutarEstadoInicial() {
+    
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Ubicando robot.", 1);
+    DisplayLCD::escribirLCD("Espere...", 2);
+
+    this_thread::sleep_for(chrono::milliseconds(5000));
+    abb_chess.motionCalibration();
+
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Pulse el boton", 1);
+    DisplayLCD::escribirLCD("para calibrar", 2);
+    interpretarComando("R"); 
+
+    while(!abb_chess.buttonPressed()) {
+        this_thread::sleep_for(chrono::milliseconds(200));
+    }
+
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Espere...", 1);
+
+    this_thread::sleep_for(chrono::milliseconds(5000));
+    interpretarComando("R");
+
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Camara calibrada", 1);
+
+    this_thread::sleep_for(chrono::milliseconds(2000));
+    
+    calibrado = 1;    
+    return EstadoBucle::Calibrado;
+    
+}
+
+EstadoBucle ejecutarEstadoCalibrado() {
+    
+    int dificultad = Configuracion::getParametro("DIFICULTAD_GNUCHESS");
+    
+    string msg = "Dific.: " + to_string(dificultad);
+
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Nueva partida.", 1);
+    DisplayLCD::escribirLCD(msg, 2);
+
+    string comando = interpretarComando("N");
+    write(fdm, comando.c_str(), comando.length());
+    
+    partidaNueva = 1;
+    return EstadoBucle::EsperaGNUChess;
+    
+}
+
+EstadoBucle ejecutarEstadoNuevaPartida() {
+    
+    int dificultad = Configuracion::getParametro("DIFICULTAD_GNUCHESS");
+    
+    string msg = "Dific.: " + to_string(dificultad);
+    string cmd = "T " + to_string(dificultad);
+
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Nueva partida.", 1);
+    DisplayLCD::escribirLCD(msg, 2);
+
+    string comando = interpretarComando(cmd);
+    write(fdm, comando.c_str(), comando.length());
+    
+    tiempoConfigurado = 1;
+    return EstadoBucle::EsperaGNUChess;
+    
+}
+
+EstadoBucle ejecutarEstadoEsperarJugada() {
+    
+    DisplayLCD::borrarLCD();
+    DisplayLCD::escribirLCD("Esperando jugada", 1);
+
+    if(abb_chess.buttonPressed()) {
+        string respuesta = interpretarComando("M");
+        write(fdm, respuesta.c_str(), respuesta.length());
+    }
+
+    return EstadoBucle::EsperaGNUChess;
+}
+
+EstadoBucle ejecutarEstadoEsperarGNUChess() {
+    
+    ChessMove respGNU;
+    stringstream resp_gnuch;    
+    
+    struct timespec timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_nsec = 500000000;
+    
+    if(pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL) > 0) {
+        if (FD_ISSET(fdm, &fd_in)) { // Si hay datos en el lado maestro de la PTY
+            memset(input, 0, MAXCMD);
+            rc = read(fdm, input, sizeof (input));
+            resp_gnuch << input;
+
+            if (resp_gnuch.str().length() > 0) {
+
+                if(debug) {
+                    cout << "main:" << endl;
+                    cout << "   Datos recibidos de terminal esclavo." << endl;
+                    cout << "   DATA: " << resp_gnuch.str() << endl;
+                    cout << "   LEN:  " << resp_gnuch.str().length() << endl;
+                }
+
+                if (Configuracion::getParametro("HABILITAR_MOVIMIENTO") == 1) {
+                    respGNU = tab->analizarRespuestaGNUChess(resp_gnuch.str());  
+
+                    if (respGNU.mate_type == MateType::Black) {
+                        DisplayLCD::borrarLCD();
+                        DisplayLCD::escribirLCD("Fin del juego", 1);
+                        DisplayLCD::escribirLCD("Ganan negras", 2);
+                    }
+
+                    if (respGNU.mate_type == MateType::White) {
+                        DisplayLCD::borrarLCD();
+                        DisplayLCD::escribirLCD("Fin del juego", 1);
+                        DisplayLCD::escribirLCD("Ganan blancas", 2);
+                    }
+
+                    if(respGNU.move_type != MovementType::None) {
+                        abb_chess.updateChessMove(&respGNU);
+                        abb_chess.playMove();
+                    }
+                    resp_gnuch.clear();
+                    memset(input, 0, MAXCMD);
+                }
+            } else if (rc < 0) mostrarError(errno, "lectura del lado maestro de la PTY");
+        }
+    } 
+    
+    if(partidaNueva) {
+        partidaNueva = 0;
+        return EstadoBucle::NuevaPartida;
+    }
+    
+    return EstadoBucle::EsperaJugada;
+
+}
+
 int main(int ac, char *av[]) {
 
-    int fdm, fds;
     int rc;
     int retvals;
-    char input[MAXCMD];
     string respuesta;
-    ChessMove respGNU;
-    int calibrado = 0;
-    int ejecutado = 1;
+    
+    
+    EstadoBucle estadoActual = EstadoBucle::Inicial, estadoSiguiente = EstadoBucle::Inicial;
     
     Configuracion::leerConfiguracion();
         
@@ -234,8 +380,6 @@ int main(int ac, char *av[]) {
     DisplayLCD::escribirLCD("Conexion ABB: ", 1);
     abb_chess.connectABBchess();
     DisplayLCD::escribirLCD("OK", 2);
-    
-    int dificultad = Configuracion::getParametro("DIFICULTAD_GNUCHESS");
     
     tab->calibrarCoordenadasExtremos(
             make_pair<double, double>(0,350),
@@ -257,7 +401,7 @@ int main(int ac, char *av[]) {
     display->escribirLCDlinea1("Esperando...");*/
     
     if (fork()) { // Crear el proceso hijo
-        fd_set fd_in;
+        
         
         ServerSocket srv(5000);
 
@@ -283,117 +427,36 @@ int main(int ac, char *av[]) {
             FD_ZERO(&fd_in);
             FD_SET(0, &fd_in);
             FD_SET(fdm, &fd_in);
-
-            struct timespec timeout;
-            timeout.tv_sec = 0;
-            timeout.tv_nsec = 500000000;
             
-            string datos_sock;
-            stringstream resp_gnuch;
-            
-            //nvo_sock >> datos_sock;
-            
-            if(calibrado == 0) {
+            switch(estadoActual) {
                 
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Ubicando robot.", 1);
-                DisplayLCD::escribirLCD("Espere...", 2);
-                
-                this_thread::sleep_for(chrono::milliseconds(5000));
-                abb_chess.motionCalibration();
-                
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Pulse el boton", 1);
-                DisplayLCD::escribirLCD("para calibrar", 2);
-                interpretarComando("R"); 
-                
-                abb_chess.waitButton();
-                
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Espere...", 1);
-                
-                this_thread::sleep_for(chrono::milliseconds(5000));
-                interpretarComando("R");
-                
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Camara calibrada", 1);
-                
-                this_thread::sleep_for(chrono::milliseconds(2000));
-                
-                string msg = "Dific.: " + to_string(dificultad);
-                string cmd = "T " + to_string(dificultad);
-                
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Nueva partida.", 1);
-                DisplayLCD::escribirLCD(msg, 2);
-                
-                interpretarComando("N");
-                interpretarComando(cmd);
-                
-                calibrado = 1;
-                
-            }
-            
-            if(calibrado == 1 && ejecutado == 1) {
-                
-                DisplayLCD::borrarLCD();
-                DisplayLCD::escribirLCD("Esperando jugada", 1);
-
-                abb_chess.waitButtonNonBlocking();
-                
-                ejecutado = 0;
-                
-                string respuesta = interpretarComando("M");
-                write(fdm, respuesta.c_str(), respuesta.length());
-                
-            }
-            
-            if(ejecutado == 0) {
-                ejecutado = abb_chess.buttonPressed();
-            }
-            
-            //rc = pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL);
-            //if (rc > 0) {
-            if(pselect(fdm + 1, &fd_in, NULL, NULL, &timeout, NULL) > 0) {
-                if (FD_ISSET(fdm, &fd_in)) { // Si hay datos en el lado maestro de la PTY
-                    memset(input, 0, MAXCMD);
-                    rc = read(fdm, input, sizeof (input));
-                    resp_gnuch << input;
+                case EstadoBucle::Inicial:
+                    // En este caso, ejecuto la calibración
+                    estadoSiguiente = ejecutarEstadoInicial();
+                    break;
                     
-                    if (resp_gnuch.str().length() > 0) {
-                        
-                        if(debug) {
-                            cout << "main:" << endl;
-                            cout << "   Datos recibidos de terminal esclavo." << endl;
-                            cout << "   DATA: " << resp_gnuch.str() << endl;
-                            cout << "   LEN:  " << resp_gnuch.str().length() << endl;
-                        }
-                        
-                        if (Configuracion::getParametro("HABILITAR_MOVIMIENTO") == 1) {
-                            respGNU = tab->analizarRespuestaGNUChess(resp_gnuch.str());  
-                            
-                            if (respGNU.mate_type == MateType::Black) {
-                                DisplayLCD::borrarLCD();
-                                DisplayLCD::escribirLCD("Fin del juego", 1);
-                                DisplayLCD::escribirLCD("Ganan negras", 2);
-                            }
-                            
-                            if (respGNU.mate_type == MateType::White) {
-                                DisplayLCD::borrarLCD();
-                                DisplayLCD::escribirLCD("Fin del juego", 1);
-                                DisplayLCD::escribirLCD("Ganan blancas", 2);
-                            }
-                                
-                            if(respGNU.move_type != MovementType::None) {
-                                abb_chess.updateChessMove(&respGNU);
-                                abb_chess.playMove();
-                            }
-                            resp_gnuch.clear();
-                            memset(input, 0, MAXCMD);
-                        }
-                    } else if (rc < 0) mostrarError(errno, "lectura del lado maestro de la PTY");
-                }
-            } 
+                case EstadoBucle::Calibrado:
+                    // Si ya calibré, tengo que iniciar una partida nueva
+                    estadoSiguiente = ejecutarEstadoCalibrado();
+                    break;
+                    
+                case EstadoBucle::NuevaPartida:
+                    // Una vez iniciada la partida, configuro el tiempo
+                    estadoSiguiente = ejecutarEstadoNuevaPartida();
+                    break;
+                    
+                case EstadoBucle::EsperaJugada:
+                    // Quedo a la espera de una jugada del humano
+                    estadoSiguiente = ejecutarEstadoEsperarJugada();
+                    break;
+                    
+                case EstadoBucle::EsperaGNUChess:
+                    estadoSiguiente = ejecutarEstadoEsperarGNUChess();
+                    break;                    
+            }
+            
+            estadoActual = estadoSiguiente;
+            
         }
     } else {
         // Proceso Hijo

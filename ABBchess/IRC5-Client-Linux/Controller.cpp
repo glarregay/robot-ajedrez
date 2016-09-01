@@ -41,7 +41,7 @@ string Controller::sendCommand(string command,bool wait_command){
   } while(bytes_read != -1);
   
   bytes_read = 0;
-  sread.clear();
+  sread.str("");
   
   send(sockfd,*buffer_send,command.length(), 0);
   

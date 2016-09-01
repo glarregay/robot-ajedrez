@@ -104,28 +104,12 @@ int ABBchess::buttonPressed(){
     
     string state_button = ctrl->sendCommand(abb_cmd->stateButton(),true);
     
-    if(state_button.compare("pressed")){
-        return 1;
-    }
-    else if(state_button.compare("notpressed")){
-        return 0;
-    }else{
-        return -1;
-    }
+    return (state_button.substr(0,7).compare("pressed") == 0);
     
 }
 
 void ABBchess::waitButtonNonBlocking() {
     ctrl->sendCommand(abb_cmd->executeRutine("ButtonWait"),false); 
-}
-
-int ABBchess::buttonPressed() {
-    string resp = ctrl->readResponse();
-    
-    if(resp.size() > 0) 
-        return 1;
-    else
-        return 0;
 }
 
 ABBchess::~ABBchess(){

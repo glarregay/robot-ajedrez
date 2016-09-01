@@ -7,18 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/DetectorPiezas.h</file>
             <file>file:/home/guille/Repos%20Github/robot-ajedrez/main.cpp</file>
             <file>file:/home/guille/Repos%20Github/robot-ajedrez/ABBchess/ABBchess.cpp</file>
             <file>file:/home/guille/Repos%20Github/robot-ajedrez/muestreadores/Muestreador.cpp</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/Tablero.cpp</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/Tablero.h</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/ABBchess/ABBchess.h</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/Configuracion.cpp</file>
+            <file>file:/home/guille/Repos%20Github/robot-ajedrez/clasificadores/ClasificadorVotacion.cpp</file>
             <file>file:/home/guille/Repos%20Github/robot-ajedrez/DetectorPiezas.cpp</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/ABBchess/IRC5-Client-Linux/Controller.cpp</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/DisplayLCD.cpp</file>
-            <file>file:/home/guille/Repos%20Github/robot-ajedrez/DisplayLCD.h</file>
+            <file>file:/home/guille/Repos%20Github/robot-ajedrez/muestreadores/MuestreadorHexagonal.cpp</file>
         </group>
     </open-files>
 </project-private>
